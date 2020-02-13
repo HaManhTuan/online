@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model {
+class CartCus extends Model {
 	protected $table   = 'cart';
 	public $timestamps = false;
 	public function sizecart() {

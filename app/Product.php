@@ -9,7 +9,7 @@ class Product extends Model {
 	protected $fillable = ['name', 'url', 'color', 'category_id', 'description', 'status', 'image', 'price', 'promotional_price', 'sale', 'count'];
 	public $timestamps  = false;
 	public function attributes() {
-		return $this->hasMany('App\Product_Size', 'product_id');
+		return $this->hasMany('App\ProductAttr', 'product_id');
 	}
 	public function category() {
 		return $this->belongsTo('App\Category', 'category_id', 'id');

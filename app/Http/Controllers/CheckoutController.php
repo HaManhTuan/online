@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Cart;
+use App\CartCus;
 use App\Order;
 use App\OrderDetail;
 use App\Product;
@@ -43,12 +43,12 @@ class CheckoutController extends Controller {
 	public function checkout(Request $req) {
 		$session_id = Session::get('session_id');
 		DB::table('cart')->where('session_id', $session_id)->update(['user_email' => Auth::guard('customers')->user()->email]);
-		$countCart = Cart::where(['session_id'                                    => $session_id])->count();
+		$countCart = CartCus::where(['session_id'                                 => $session_id])->count();
 		if ($countCart == 0) {
 			return redirect('view-cart')->with('mess_error', 'Giỏ hàng đang trống');
 		} else {
-			$cart = Cart::where(['session_id' => $session_id])->get();
-			foreach ($cart as $key            => $value) {
+			$cart = CartCus::where(['session_id' => $session_id])->get();
+			foreach ($cart as $key               => $value) {
 				$productDetail     = Product::where('id', $value->product_id)->first();
 				$cart[$key]->image = $productDetail->image;
 			}
@@ -68,6 +68,7 @@ class CheckoutController extends Controller {
 		$order->phone         = $req->phone;
 		$order->note          = $req->note;
 		$order->address       = $req->address;
+		$order->order_status  = '1';
 		$order->coupon_code   = Session::get('CouponCode');
 		$order->coupon_amount = Session::get('CouponAmount');
 		if ($order->save()) {
@@ -76,16 +77,16 @@ class CheckoutController extends Controller {
 			Session::put('order_id', $order_id);
 			Session::put('total_price', $req->total_price);
 			foreach ($cartProducts as $value) {
-				$orderdetail           = new OrderDetail();
-				$orderdetail->order_id = $order_id;
-
+				$orderdetail               = new OrderDetail();
+				$orderdetail->order_id     = $order_id;
+				$orderdetail->product_id   = $value->product_id;
 				$orderdetail->customer_id  = Auth::guard('customers')->user()->id;
 				$orderdetail->product_name = $value->product_name;
+				$orderdetail->size         = $value->size;
+				$orderdetail->price        = $value->price;
+				$orderdetail->quantity     = $value->quantity;
 
-				$orderdetail->size     = $value->size;
-				$orderdetail->price    = $value->price;
-				$orderdetail->quantity = $value->quantity;
-				$query                 = $orderdetail->save();
+				$query = $orderdetail->save();
 			}
 			if ($query) {
 				$msg = [

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 11, 2020 at 05:04 PM
+-- Generation Time: Feb 13, 2020 at 05:41 PM
 -- Server version: 5.7.28-0ubuntu0.19.04.2
 -- PHP Version: 7.2.24-0ubuntu0.19.04.2
 
@@ -53,7 +53,7 @@ CREATE TABLE `categories` (
   `status` longtext NOT NULL,
   `status_cate` longtext NOT NULL,
   `parent_id` int(11) NOT NULL,
-  `arrange` longtext NOT NULL,
+  `arrange` longtext,
   `description` longtext,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -116,7 +116,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `password`, `address`, `created_at`, `updated_at`) VALUES
-(1, 'Hà Mạnh Tuấn', 'tuanhanb98@gmail.com', '0979587821', '$2y$10$AjhI7KlY7XoynAJ4mCxEceVBLnJN4RxRWhRAov2SuO71m6NX0/e92', 'Hà Nội', '2020-02-08 10:56:20', '2020-02-08 14:02:24');
+(1, 'Hà Mạnh Tuấn', 'tuanhanb98@gmail.com', '0979587821', '$2y$10$AjhI7KlY7XoynAJ4mCxEceVBLnJN4RxRWhRAov2SuO71m6NX0/e92', 'Hà Nội', '2020-02-08 10:56:20', '2020-02-11 08:55:15');
 
 -- --------------------------------------------------------
 
@@ -208,6 +208,7 @@ CREATE TABLE `orderdetail` (
   `id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
   `product_name` longtext NOT NULL,
   `size` longtext NOT NULL,
   `price` float NOT NULL,
@@ -220,9 +221,9 @@ CREATE TABLE `orderdetail` (
 -- Dumping data for table `orderdetail`
 --
 
-INSERT INTO `orderdetail` (`id`, `order_id`, `customer_id`, `product_name`, `size`, `price`, `quantity`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Chân Váy Thun Bé Gái Nhiều Họa Tiết Xinh Xắn', '5', 29000, 1, '2020-02-10 13:44:45', '2020-02-10 13:44:45'),
-(2, 1, 1, 'Áo dài Tết cao cấp', '3', 254000, 1, '2020-02-10 13:44:45', '2020-02-10 13:44:45');
+INSERT INTO `orderdetail` (`id`, `order_id`, `customer_id`, `product_id`, `product_name`, `size`, `price`, `quantity`, `created_at`, `updated_at`) VALUES
+(1, 3, 1, 8, 'Chân Váy Thun Bé Gái Nhiều Họa Tiết Xinh Xắn', '5', 29000, 1, '2020-02-12 14:29:36', '2020-02-12 14:29:36'),
+(2, 3, 1, 9, 'Áo dài Tết cao cấp', '1', 254000, 1, '2020-02-12 14:29:36', '2020-02-12 14:29:36');
 
 -- --------------------------------------------------------
 
@@ -251,7 +252,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `customer_id`, `email`, `total_price`, `name`, `phone`, `note`, `order_status`, `address`, `coupon_code`, `coupon_amount`, `created_at`, `updated_at`) VALUES
-(1, 1, 'tuanhanb98@gmail.com', 254700, 'Hà Mạnh Tuấn', '0979587821', NULL, 1, 'Hà Nội', '123', '28300', '2020-02-10 13:44:45', '2020-02-10 13:44:45');
+(3, 1, 'tuanhanb98@gmail.com', 283000, 'Hà Mạnh Tuấn', '0979587821', NULL, 4, 'Hà Nội', NULL, NULL, '2020-02-12 14:29:36', '2020-02-12 14:48:42');
 
 -- --------------------------------------------------------
 
@@ -324,8 +325,8 @@ CREATE TABLE `product_attr` (
 
 INSERT INTO `product_attr` (`id`, `size_id`, `stock`, `product_id`, `created_at`, `updated_at`) VALUES
 (1, 1, 0, 8, '2020-02-01 04:44:26', '2020-02-04 08:56:50'),
-(5, 5, 10, 8, '2020-02-01 04:44:26', '2020-02-01 04:44:26'),
-(6, 1, 10, 9, '2020-02-01 05:12:55', '2020-02-04 09:21:39'),
+(5, 5, 10, 8, '2020-02-01 04:44:26', '2020-02-12 14:55:35'),
+(6, 1, 10, 9, '2020-02-01 05:12:55', '2020-02-12 14:55:38'),
 (7, 2, 10, 9, '2020-02-01 05:12:55', '2020-02-04 09:21:43'),
 (8, 3, 10, 9, '2020-02-01 05:12:55', '2020-02-04 09:21:45'),
 (9, 4, 0, 9, '2020-02-01 05:12:55', '2020-02-01 05:12:55'),
@@ -603,7 +604,7 @@ ALTER TABLE `orderdetail`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `products`
 --

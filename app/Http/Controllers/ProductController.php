@@ -276,8 +276,9 @@ class ProductController extends Controller {
 	}
 	/*Get table size*/
 	public function GetTableSize($id) {
-		$size_data  = ProductAttr::where('product_id', $id)->get();
-		$data_table = "";
+		$product_data = Product::with('attributes')->where(['id' => $id])->first();
+		$size_data    = ProductAttr::where('product_id', $id)->get();
+		$data_table   = "";
 		$data_table .= '<table class="table table-bordered">
 		<tr>
 		<td>STT</td>
@@ -286,14 +287,14 @@ class ProductController extends Controller {
 		<td>Action</td>
 		</tr>';
 		$stt = 0;
-		foreach ($size_data as $size_data) {
+		foreach ($product_data->attributes as $size_data) {
 			$stt++;
 			$name_size       = ProductSize::where(['id'         => $size_data['size_id']])->value('size');
 			$stock_size_attr = ProductAttr::where(['product_id' => $id])->value('stock');
 			$data_table .= '<tr>';
 			$data_table .= '<td>'.$stt.'</td>';
 			$data_table .= '<td>'.$name_size.'</td>';
-			$data_table .= '<td>'.$stock_size_attr.'</td>';
+			$data_table .= '<td>'.$size_data['stock'].'</td>';
 			$data_table .= '<td>
 			<button data-id="'.$size_data['id'].'" class="btn btn-danger btn-del-size"><i class="fas fa-trash"></i></button>
 			</td>';

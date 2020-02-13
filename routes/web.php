@@ -108,5 +108,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'Admin'], function () {
 		Route::group(['prefix' => 'order', 'middleware' => 'Admin'], function () {
 				Route::match(['get', 'post'], 'view-order', 'OrderController@vieworder');
 				Route::match(['get', 'post'], 'view-orderdetail/{id}', 'OrderController@vieworderdetail');
+				Route::post('change-status', 'OrderController@changestatus');
+				Route::post('change-customer', 'OrderController@changecustomer');
+				Route::post('change-order', 'OrderController@changeorder');
 			});
 	});

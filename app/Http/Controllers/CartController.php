@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Cart;
+use App\CartCus;
 use App\Coupon;
 use App\Product;
 use App\ProductAttr;
@@ -11,6 +11,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Session;
+//use Cart;
 
 class CartController extends Controller {
 	public function addcart(Request $req) {
@@ -21,7 +22,7 @@ class CartController extends Controller {
 			$session_id = Str::random(30);
 			Session::put('session_id', $session_id);
 		}
-		$countProduct = Cart::where(['product_id' => $req->product_id, 'size' => $req->size_id, 'session_id' => $session_id])->count();
+		$countProduct = CartCus::where(['product_id' => $req->product_id, 'size' => $req->size_id, 'session_id' => $session_id])->count();
 		if ($countProduct > 0) {
 			$msg = [
 				'status' => '_error',
@@ -30,14 +31,14 @@ class CartController extends Controller {
 			];
 			return response()->json($msg);
 		} else {
-			$cart               = new Cart();
+			$cart               = new CartCus();
 			$cart->product_id   = $req->product_id;
 			$cart->size         = $req->size_id;
 			$cart->price        = $req->price;
 			$cart->quantity     = $req->quantity;
 			$cart->total        = $req->price*$req->quantity;
 			$cart->product_name = $req->product_name;
-			$cart->user_email = Auth::guard('customers')->user()->email;
+			$cart->user_email   = Auth::guard('customers')->user()->email;
 			$cart->session_id   = $session_id;
 			$query              = $cart->save();
 			if ($query) {
@@ -61,11 +62,11 @@ class CartController extends Controller {
 		$session_id = Session::get('session_id');
 		if (Auth::guard('customers')->check()) {
 			$user_email = Auth::guard('customers')->user()->email;
-			$countCart  = Cart::where(['user_email' => $user_email])->count();
-			$cart       = Cart::where(['user_email' => $user_email])->get();
+			$countCart  = CartCus::where(['user_email' => $user_email])->count();
+			$cart       = CartCus::where(['user_email' => $user_email])->get();
 		} else {
-			$countCart = Cart::where(['session_id' => $session_id])->count();
-			$cart      = Cart::where(['session_id' => $session_id])->get();
+			$countCart = CartCus::where(['session_id' => $session_id])->count();
+			$cart      = CartCus::where(['session_id' => $session_id])->get();
 		}
 
 		foreach ($cart as $key => $value) {
@@ -81,7 +82,7 @@ class CartController extends Controller {
 	public function decart(Request $req) {
 		Session::forget('CouponAmount');
 		Session::forget('CouponCode');
-		$delCart = Cart::where(['id' => $req->id])->delete();
+		$delCart = CartCus::where(['id' => $req->id])->delete();
 		if ($delCart) {
 			$msg = [
 				'status' => '_success',
@@ -135,10 +136,10 @@ class CartController extends Controller {
 			if (Auth::guard('customers')->check()) {
 				$user_email = Auth::guard('customers')->user()->email;
 				//$countCart  = Cart::where(['user_email' => $user_email])->count();
-				$cart = Cart::where(['user_email' => $user_email])->get();
+				$cart = CartCus::where(['user_email' => $user_email])->get();
 			} else {
 				//$countCart = Cart::where(['session_id' => $session_id])->count();
-				$cart = Cart::where(['session_id' => $session_id])->get();
+				$cart = CartCus::where(['session_id' => $session_id])->get();
 			}
 			//$cart         = Cart::where(['session_id' => $session_id])->get();
 			$total_amount = 0;

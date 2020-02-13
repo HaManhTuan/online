@@ -58,8 +58,17 @@
 									</td>
 									<td>{{ $orders->email }}</td>
 									<td>{{ number_format($orders->total_price) }}</td>
-									<td>@if($orders->order_status == 1)<span class="badge badge-success">
-									Mới</span> @endif</td>
+									<td>@if($orders->order_status == 1)
+										<span class="badge badge-success" style="margin-left: 10px">Mới</span>
+										@elseif($orders->order_status == 2)
+										<span class="badge badge-primary" style="margin-left: 10px">Đang xử lý</span>
+										@elseif($orders->order_status == 3)
+										<span class="badge badge-warning" style="margin-left: 10px">Đang chuyển</span>
+										@elseif($orders->order_status == 4)
+										<span class="badge badge-info" style="margin-left: 10px">Đã chuyển</span>
+										@elseif($orders->order_status == 5)
+										<span class="badge badge-danger" style="margin-left: 10px">Đã hủy</span>
+									@endif</td>
 									<td><a href="{{ url('admin/order/view-orderdetail/'.$orders->id) }}">Chi tiết</a></td>
 								</tr>
 								@endforeach
